@@ -1,0 +1,81 @@
+<div class="container">
+  <div class="page-header">
+    <h2 class="page-title">Automóveis</h2>
+    @if (auth.ehAgente()) {
+      <button mat-raised-button color="primary" routerLink="/automoveis/novo">
+        <mat-icon>add</mat-icon>
+        Novo Automóvel
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="56"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && automoveis.length === 0) {
+    <mat-card class="empty-card">
+      <mat-card-content class="empty-state">
+        <mat-icon class="empty-icon">directions_car</mat-icon>
+        <p>Nenhum automóvel cadastrado.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && automoveis.length > 0) {
+    <mat-card>
+      <mat-card-content class="table-container">
+        <table mat-table [dataSource]="automoveis" class="full-width">
+
+          <ng-container matColumnDef="placa">
+            <th mat-header-cell *matHeaderCellDef>Placa</th>
+            <td mat-cell *matCellDef="let a">{{ a.placa }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="marca">
+            <th mat-header-cell *matHeaderCellDef>Marca</th>
+            <td mat-cell *matCellDef="let a">{{ a.marca }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="modelo">
+            <th mat-header-cell *matHeaderCellDef>Modelo</th>
+            <td mat-cell *matCellDef="let a">{{ a.modelo }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ano">
+            <th mat-header-cell *matHeaderCellDef>Ano</th>
+            <td mat-cell *matCellDef="let a">{{ a.ano }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="disponivel">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let a">
+              <mat-chip [color]="a.disponivel ? 'primary' : 'warn'" selected>
+                {{ a.disponivel ? 'Disponível' : 'Indisponível' }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef class="col-acoes">Ações</th>
+            <td mat-cell *matCellDef="let a" class="col-acoes">
+              @if (auth.ehAgente()) {
+                <button mat-icon-button color="accent" matTooltip="Editar" (click)="editar(a.id!)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="Excluir" (click)="excluir(a)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

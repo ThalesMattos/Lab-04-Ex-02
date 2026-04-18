@@ -1,0 +1,45 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ editando ? 'Editar' : 'Novo' }} Pedido de Aluguel</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="salvar()" class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Cliente</mat-label>
+          <mat-select formControlName="clienteId">
+            @for (c of clientes; track c.id) {
+              <mat-option [value]="c.id">{{ c.nome }} ({{ c.cpf }})</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Automóvel</mat-label>
+          <mat-select formControlName="automovelId">
+            @for (a of automoveis; track a.id) {
+              <mat-option [value]="a.id">{{ a.marca }} {{ a.modelo }} — {{ a.placa }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Início</mat-label>
+          <input matInput type="date" formControlName="dataInicio" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Fim</mat-label>
+          <input matInput type="date" formControlName="dataFim" />
+        </mat-form-field>
+
+        <div class="form-actions full-span">
+          <button mat-button type="button" routerLink="/pedidos">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ editando ? 'Salvar' : 'Criar Pedido' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

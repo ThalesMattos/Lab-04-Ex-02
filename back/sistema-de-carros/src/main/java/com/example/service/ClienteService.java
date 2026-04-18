@@ -37,6 +37,11 @@ public class ClienteService {
     }
 
     @Transactional
+    public Cliente buscarPorUsuarioId(Long usuarioId) {
+        return repository.findByUsuarioId(usuarioId).orElse(null);
+    }
+
+    @Transactional
     public Cliente cadastrar(Cliente cliente) {
         validarDadosObrigatorios(cliente);
         validarEmpregadores(cliente);

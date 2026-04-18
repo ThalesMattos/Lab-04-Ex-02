@@ -21,4 +21,5 @@ export interface Cliente {
   endereco: Endereco;
   profissao?: string;
   empregadores: Empregador[];
+  usuarioId?: number;
 }

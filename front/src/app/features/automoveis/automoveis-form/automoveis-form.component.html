@@ -1,0 +1,60 @@
+<div class="container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ editando ? 'Editar' : 'Novo' }} Automóvel</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="salvar()" class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Matrícula</mat-label>
+          <input matInput formControlName="matricula" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Placa</mat-label>
+          <input matInput formControlName="placa" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Marca</mat-label>
+          <input matInput formControlName="marca" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Modelo</mat-label>
+          <input matInput formControlName="modelo" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ano</mat-label>
+          <input matInput type="number" formControlName="ano" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Proprietário</mat-label>
+          <mat-select formControlName="tipoProprietario">
+            <mat-option value="EMPRESA">Empresa</mat-option>
+            <mat-option value="CLIENTE">Cliente</mat-option>
+            <mat-option value="BANCO">Banco</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-span">
+          <mat-label>Nome do Proprietário</mat-label>
+          <input matInput formControlName="nomeProprietario" />
+        </mat-form-field>
+
+        <div class="toggle-row">
+          <mat-slide-toggle formControlName="disponivel">Disponível</mat-slide-toggle>
+        </div>
+
+        <div class="form-actions full-span">
+          <button mat-button type="button" routerLink="/automoveis">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+            {{ editando ? 'Salvar' : 'Cadastrar' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

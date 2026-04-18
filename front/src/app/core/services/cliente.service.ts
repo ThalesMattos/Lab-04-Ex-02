@@ -18,6 +18,10 @@ export class ClienteService {
     return this.http.get<Cliente>(`${this.apiUrl}/${id}`);
   }
 
+  buscarPorUsuarioId(usuarioId: number): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.apiUrl}/usuario/${usuarioId}`);
+  }
+
   cadastrar(cliente: Cliente): Observable<Cliente> {
     return this.http.post<Cliente>(this.apiUrl, cliente);
   }

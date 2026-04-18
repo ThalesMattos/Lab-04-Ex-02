@@ -43,6 +43,20 @@ public class ClienteController {
     }
 
     /**
+     * GET /clientes/usuario/{usuarioId}
+     * Busca o cliente vinculado a um usuario.
+     * Retorna 200 com o cliente ou 404 se nao existir.
+     */
+    @Get("/usuario/{usuarioId}")
+    public HttpResponse<Cliente> buscarPorUsuarioId(@PathVariable Long usuarioId) {
+        Cliente cliente = service.buscarPorUsuarioId(usuarioId);
+        if (cliente == null) {
+            return HttpResponse.notFound();
+        }
+        return HttpResponse.ok(cliente);
+    }
+
+    /**
      * POST /clientes
      * Cadastra um novo cliente.
      */

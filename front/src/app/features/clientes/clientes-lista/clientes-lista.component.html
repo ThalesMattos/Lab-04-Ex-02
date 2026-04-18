@@ -1,12 +1,6 @@
 <div class="container">
   <div class="page-header">
-    <h2 class="page-title">Clientes</h2>
-    @if (!auth.ehAgente()) {
-      <button mat-raised-button color="primary" routerLink="/clientes/novo">
-        <mat-icon>add</mat-icon>
-        Novo Cliente
-      </button>
-    }
+    <h2 class="page-title">Clientes Cadastrados</h2>
   </div>
 
   @if (loading) {
@@ -20,11 +14,6 @@
       <mat-card-content class="empty-state">
         <mat-icon class="empty-icon">people_outline</mat-icon>
         <p>Nenhum cliente cadastrado.</p>
-        @if (!auth.ehAgente()) {
-          <button mat-raised-button color="primary" routerLink="/clientes/novo">
-            Cadastrar primeiro cliente
-          </button>
-        }
       </mat-card-content>
     </mat-card>
   }
@@ -70,24 +59,6 @@
               >
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button
-                mat-icon-button
-                color="accent"
-                matTooltip="Editar"
-                (click)="editarCliente(c.id!)"
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
-              @if (!auth.ehAgente()) {
-                <button
-                  mat-icon-button
-                  color="warn"
-                  matTooltip="Excluir"
-                  (click)="excluirCliente(c)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              }
             </td>
           </ng-container>
 

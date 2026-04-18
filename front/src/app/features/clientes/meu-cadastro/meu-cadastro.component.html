@@ -1,0 +1,159 @@
+@if (loading) {
+  <div class="loading-container">
+    <mat-spinner diameter="56"></mat-spinner>
+  </div>
+}
+
+@if (!loading) {
+  <div class="container">
+    <div class="page-header">
+      <h2 class="page-title">
+        {{ isEdicao ? 'Meus Dados Pessoais' : 'Completar Cadastro' }}
+      </h2>
+    </div>
+
+    <app-erro-alert [mensagem]="erroApi"></app-erro-alert>
+
+    @if (!isEdicao) {
+      <p class="info-text">Para utilizar o sistema, complete seu cadastro com seus dados pessoais.</p>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title>Dados Pessoais</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-lg">
+              <mat-label>Nome *</mat-label>
+              <input matInput formControlName="nome" placeholder="Nome completo" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>CPF *</mat-label>
+              <input matInput formControlName="cpf" mask="000.000.000-00" placeholder="000.000.000-00" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>RG *</mat-label>
+              <input matInput formControlName="rg" placeholder="RG" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>Profissão</mat-label>
+              <input matInput formControlName="profissao" placeholder="Ex: Engenheiro" />
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="section-card" formGroupName="endereco">
+        <mat-card-header>
+          <mat-card-title>Endereço</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-sm">
+              <mat-label>CEP</mat-label>
+              <input matInput formControlName="cep" mask="00000-000" placeholder="00000-000" (blur)="buscarCep()" />
+              <mat-hint>Preenchimento automático ao sair do campo</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-lg">
+              <mat-label>Logradouro *</mat-label>
+              <input matInput formControlName="logradouro" placeholder="Rua, Avenida..." />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-sm">
+              <mat-label>Número *</mat-label>
+              <input matInput formControlName="numero" placeholder="123" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>Complemento</mat-label>
+              <input matInput formControlName="complemento" placeholder="Apto, Sala..." />
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>Bairro *</mat-label>
+              <input matInput formControlName="bairro" placeholder="Bairro" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-md">
+              <mat-label>Cidade *</mat-label>
+              <input matInput formControlName="cidade" placeholder="Cidade" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="field-sm">
+              <mat-label>Estado *</mat-label>
+              <mat-select formControlName="estado">
+                @for (uf of estados; track uf) {
+                  <mat-option [value]="uf">{{ uf }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="section-card">
+        <mat-card-header>
+          <mat-card-title>Empregadores</mat-card-title>
+          <span class="header-spacer"></span>
+          <button type="button" mat-raised-button color="accent" [disabled]="empregadores.length >= 3" (click)="adicionarEmpregador()">
+            <mat-icon>add</mat-icon> Adicionar Empregador
+          </button>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div formArrayName="empregadores">
+            @for (emp of empregadores.controls; track $index; let i = $index) {
+              <div [formGroupName]="i" class="empregador-row">
+                <mat-form-field appearance="outline" class="field-lg">
+                  <mat-label>Nome do Empregador *</mat-label>
+                  <input matInput formControlName="nome" placeholder="Empresa ou nome do empregador" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="field-md">
+                  <mat-label>Rendimento *</mat-label>
+                  <span matTextPrefix>R$&nbsp;</span>
+                  <input matInput type="number" formControlName="rendimento" placeholder="0.00" min="0" step="0.01" />
+                </mat-form-field>
+
+                <button type="button" mat-icon-button color="warn" matTooltip="Remover empregador" (click)="removerEmpregador(i)">
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </div>
+            }
+
+            @if (empregadores.length === 0) {
+              <p class="no-empregadores">Nenhum empregador adicionado.</p>
+            }
+
+            @if (empregadores.length >= 3) {
+              <p class="max-empregadores">
+                <mat-icon inline>info</mat-icon>
+                Limite máximo de 3 empregadores atingido.
+              </p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="form-actions">
+        <button type="submit" mat-raised-button color="primary" [disabled]="salvando">
+          @if (!salvando) { <mat-icon>save</mat-icon> }
+          @if (salvando) { <mat-spinner diameter="20" class="btn-spinner"></mat-spinner> }
+          {{ salvando ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+}

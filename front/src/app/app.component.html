@@ -2,7 +2,14 @@
   <span class="app-title">🚗 Sistema de Aluguel de Carros</span>
   <span class="spacer"></span>
   @if (auth.estaLogado()) {
-    <a mat-button routerLink="/clientes" class="nav-link">Clientes</a>
+    <a mat-button routerLink="/pedidos" class="nav-link">Pedidos</a>
+    <a mat-button routerLink="/automoveis" class="nav-link">Automóveis</a>
+    @if (auth.ehAgente()) {
+      <a mat-button routerLink="/clientes" class="nav-link">Clientes</a>
+    }
+    @if (auth.ehCliente()) {
+      <a mat-button routerLink="/meu-cadastro" class="nav-link">Meu Cadastro</a>
+    }
     <mat-chip
       [color]="auth.ehAgente() ? 'accent' : 'primary'"
       selected

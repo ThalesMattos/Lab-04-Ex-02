@@ -27,6 +27,9 @@ public class Cliente {
 
     private String profissao;
 
+    @Column(unique = true)
+    private Long usuarioId;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "cliente_empregadores",
                      joinColumns = @JoinColumn(name = "cliente_id"))
@@ -65,4 +68,7 @@ public class Cliente {
 
     public List<Empregador> getEmpregadores() { return empregadores; }
     public void setEmpregadores(List<Empregador> empregadores) { this.empregadores = empregadores; }
+
+    public Long getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(Long usuarioId) { this.usuarioId = usuarioId; }
 }

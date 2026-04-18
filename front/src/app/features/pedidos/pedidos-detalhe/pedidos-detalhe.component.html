@@ -1,0 +1,111 @@
+@if (pedido) {
+<div class="container">
+  <div class="page-header">
+    <h2 class="page-title">Pedido #{{ pedido.id }}</h2>
+    <button mat-button routerLink="/pedidos">
+      <mat-icon>arrow_back</mat-icon> Voltar
+    </button>
+  </div>
+
+  <mat-card class="detail-card">
+    <mat-card-content>
+      <div class="info-grid">
+        <div><strong>Status:</strong>
+          <mat-chip [class]="'status-' + pedido.status" selected>{{ statusLabel(pedido.status) }}</mat-chip>
+        </div>
+        <div><strong>Cliente:</strong> {{ pedido.cliente?.nome }} ({{ pedido.cliente?.cpf }})</div>
+        <div><strong>Automóvel:</strong> {{ pedido.automovel?.marca }} {{ pedido.automovel?.modelo }} — {{ pedido.automovel?.placa }}</div>
+        <div><strong>Período:</strong> {{ pedido.dataInicio | date:'dd/MM/yyyy' }} a {{ pedido.dataFim | date:'dd/MM/yyyy' }}</div>
+        @if (pedido.justificativa) {
+          <div class="full-span"><strong>Justificativa:</strong> {{ pedido.justificativa }}</div>
+        }
+      </div>
+
+      <!-- Dados financeiros do cliente (visível para agentes) -->
+      @if (auth.ehAgente() && pedido.cliente) {
+        <mat-divider class="section-divider"></mat-divider>
+        <h3>Dados Financeiros do Cliente</h3>
+        <div class="info-grid">
+          <div><strong>Profissão:</strong> {{ pedido.cliente.profissao || '—' }}</div>
+          @for (emp of pedido.cliente.empregadores; track emp.nome) {
+            <div><strong>{{ emp.nome }}:</strong> {{ emp.rendimento | currency:'BRL' }}</div>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Avaliação pelo agente -->
+  @if (auth.ehAgente() && pedido.status === 'AGUARDANDO_ANALISE') {
+    <mat-card class="action-card">
+      <mat-card-header><mat-card-title>Avaliação Financeira</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="avaliacaoForm" class="avaliacao-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Justificativa (opcional)</mat-label>
+            <textarea matInput formControlName="justificativa" rows="3"></textarea>
+          </mat-form-field>
+          <div class="form-actions">
+            <button mat-raised-button color="warn" type="button" (click)="reprovar()">Reprovar</button>
+            <button mat-raised-button color="primary" type="button" (click)="aprovar()">Aprovar</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Associar contrato de crédito (agente, pedido aprovado) -->
+  @if (auth.ehAgente() && pedido.status === 'APROVADO' && !contrato) {
+    <mat-card class="action-card">
+      <mat-card-header><mat-card-title>Associar Contrato de Crédito</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="contratoForm" (ngSubmit)="associarContrato()" class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Banco Agente</mat-label>
+            <input matInput formControlName="bancoAgente" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Valor Financiado</mat-label>
+            <input matInput type="number" formControlName="valorFinanciado" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Nº Parcelas</mat-label>
+            <input matInput type="number" formControlName="numeroParcelas" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Taxa de Juros (%)</mat-label>
+            <input matInput type="number" formControlName="taxaJuros" />
+          </mat-form-field>
+          <div class="form-actions full-span">
+            <button mat-raised-button color="primary" type="submit" [disabled]="contratoForm.invalid">Associar Contrato</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Contrato já associado -->
+  @if (contrato) {
+    <mat-card class="action-card">
+      <mat-card-header><mat-card-title>Contrato de Crédito</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div><strong>Banco:</strong> {{ contrato.bancoAgente }}</div>
+          <div><strong>Valor:</strong> {{ contrato.valorFinanciado | currency:'BRL' }}</div>
+          <div><strong>Parcelas:</strong> {{ contrato.numeroParcelas }}x</div>
+          <div><strong>Juros:</strong> {{ contrato.taxaJuros }}%</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  <!-- Cancelar (cliente) -->
+  @if (auth.ehCliente() && (pedido.status === 'AGUARDANDO_ANALISE' || pedido.status === 'APROVADO')) {
+    <div class="cancel-section">
+      <button mat-raised-button color="warn" (click)="cancelar()">
+        <mat-icon>cancel</mat-icon> Cancelar Pedido
+      </button>
+    </div>
+  }
+</div>
+}

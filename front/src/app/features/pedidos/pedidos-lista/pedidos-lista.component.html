@@ -1,0 +1,88 @@
+<div class="container">
+  <div class="page-header">
+    <h2 class="page-title">Pedidos de Aluguel</h2>
+    @if (auth.ehCliente()) {
+      <button mat-raised-button color="primary" routerLink="/pedidos/novo">
+        <mat-icon>add</mat-icon>
+        Novo Pedido
+      </button>
+    }
+  </div>
+
+  @if (loading) {
+    <div class="loading-container">
+      <mat-spinner diameter="56"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && pedidos.length === 0) {
+    <mat-card class="empty-card">
+      <mat-card-content class="empty-state">
+        <mat-icon class="empty-icon">receipt_long</mat-icon>
+        <p>Nenhum pedido encontrado.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && pedidos.length > 0) {
+    <mat-card>
+      <mat-card-content class="table-container">
+        <table mat-table [dataSource]="pedidos" class="full-width">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let p">{{ p.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef>Cliente</th>
+            <td mat-cell *matCellDef="let p">{{ p.cliente?.nome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="automovel">
+            <th mat-header-cell *matHeaderCellDef>Automóvel</th>
+            <td mat-cell *matCellDef="let p">{{ p.automovel?.marca }} {{ p.automovel?.modelo }} ({{ p.automovel?.placa }})</td>
+          </ng-container>
+
+          <ng-container matColumnDef="periodo">
+            <th mat-header-cell *matHeaderCellDef>Período</th>
+            <td mat-cell *matCellDef="let p">{{ p.dataInicio | date:'dd/MM/yyyy' }} — {{ p.dataFim | date:'dd/MM/yyyy' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let p">
+              <mat-chip [class]="'status-' + p.status" selected>
+                {{ statusLabel(p.status) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef class="col-acoes">Ações</th>
+            <td mat-cell *matCellDef="let p" class="col-acoes">
+              <button mat-icon-button color="primary" matTooltip="Ver detalhes" (click)="verPedido(p.id!)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              @if (p.status === 'AGUARDANDO_ANALISE') {
+                <button mat-icon-button color="accent" matTooltip="Editar" (click)="editarPedido(p.id!)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
+              @if (p.status === 'AGUARDANDO_ANALISE' || p.status === 'APROVADO') {
+                @if (auth.ehCliente()) {
+                  <button mat-icon-button color="warn" matTooltip="Cancelar" (click)="cancelarPedido(p)">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

@@ -5,6 +5,40 @@
   min-height: calc(100vh - 64px);
   padding: 24px;
   background-color: #f5f5f5;
+  gap: 48px;
+}
+
+.login-illustration {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+}
+
+.illustration-img {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  margin-bottom: 16px;
+}
+
+.illustration-text {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1565c0;
+  margin: 0 0 6px;
+  text-align: center;
+}
+
+.illustration-sub {
+  font-size: 0.9rem;
+  color: #757575;
+  text-align: center;
+  margin: 0;
+}
+
+@media (max-width: 800px) {
+  .login-illustration { display: none; }
 }
 
 .login-card {

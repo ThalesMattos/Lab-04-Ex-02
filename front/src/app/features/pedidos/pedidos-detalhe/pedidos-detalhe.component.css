@@ -1,0 +1,12 @@
+.container { padding: 24px; max-width: 900px; margin: 0 auto; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { margin: 0; font-size: 1.5rem; font-weight: 500; }
+.detail-card { margin-bottom: 24px; }
+.action-card { margin-bottom: 24px; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; padding: 8px 0; }
+.full-span { grid-column: 1 / -1; }
+.section-divider { margin: 16px 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+.avaliacao-form .full-width { width: 100%; }
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; padding-top: 8px; }
+.cancel-section { display: flex; justify-content: flex-end; margin-top: 16px; }

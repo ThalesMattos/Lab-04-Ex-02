@@ -1,0 +1,10 @@
+.container { padding: 24px; max-width: 1200px; margin: 0 auto; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-title { margin: 0; font-size: 1.5rem; font-weight: 500; }
+.loading-container { display: flex; justify-content: center; padding: 64px 0; }
+.empty-card { text-align: center; }
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 48px 16px; color: #9e9e9e; }
+.empty-icon { font-size: 64px; width: 64px; height: 64px; margin-bottom: 16px; }
+.table-container { overflow-x: auto; }
+.full-width { width: 100%; }
+.col-acoes { width: 120px; text-align: center; }
