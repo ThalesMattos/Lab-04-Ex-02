@@ -10,8 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PedidoService } from '../../../core/services/pedido.service';
 import { AutomovelService } from '../../../core/services/automovel.service';
 import { ClienteService } from '../../../core/services/cliente.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { Automovel } from '../../../core/models/automovel.model';
-import { Cliente } from '../../../core/models/cliente.model';
 
 @Component({
   selector: 'app-pedidos-form',
@@ -33,13 +33,14 @@ export class PedidosFormComponent implements OnInit {
   editando = false;
   pedidoId?: number;
   automoveis: Automovel[] = [];
-  clientes: Cliente[] = [];
+  clienteId?: number;
 
   constructor(
     private fb: FormBuilder,
     private pedidoService: PedidoService,
     private automovelService: AutomovelService,
     private clienteService: ClienteService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
@@ -47,14 +48,30 @@ export class PedidosFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      clienteId: [null, Validators.required],
       automovelId: [null, Validators.required],
       dataInicio: ['', Validators.required],
       dataFim: ['', Validators.required],
     });
 
     this.automovelService.listarDisponiveis().subscribe((a) => (this.automoveis = a));
-    this.clienteService.listarTodos().subscribe((c) => (this.clientes = c));
+
+    // Busca o clienteId vinculado ao usuario logado
+    const usuario = this.authService.usuarioLogado();
+    if (usuario) {
+      this.clienteService.buscarPorUsuarioId(usuario.id).subscribe({
+        next: (cliente) => {
+          this.clienteId = cliente.id;
+        },
+        error: () => {
+          this.snackBar.open(
+            'Complete seu cadastro pessoal antes de criar um pedido.',
+            'Ir para Meu Cadastro',
+            { duration: 6000 }
+          ).onAction().subscribe(() => this.router.navigate(['/meu-cadastro']));
+          this.router.navigate(['/pedidos']);
+        },
+      });
+    }
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -62,13 +79,12 @@ export class PedidosFormComponent implements OnInit {
       this.pedidoId = +id;
       this.pedidoService.buscarPorId(this.pedidoId).subscribe({
         next: (p) => {
+          this.clienteId = p.cliente?.id;
           this.form.patchValue({
-            clienteId: p.cliente?.id,
             automovelId: p.automovel?.id,
             dataInicio: p.dataInicio,
             dataFim: p.dataFim,
           });
-          // Include current automovel in list even if not in "disponiveis"
           if (p.automovel && !this.automoveis.find((a) => a.id === p.automovel.id)) {
             this.automoveis.push(p.automovel);
           }
@@ -82,8 +98,8 @@ export class PedidosFormComponent implements OnInit {
   }
 
   salvar(): void {
-    if (this.form.invalid) return;
-    const dados = this.form.value;
+    if (this.form.invalid || !this.clienteId) return;
+    const dados = { ...this.form.value, clienteId: this.clienteId };
 
     if (this.editando && this.pedidoId) {
       this.pedidoService.modificar(this.pedidoId, dados).subscribe({

@@ -5,16 +5,7 @@
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="salvar()" class="form-grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Cliente</mat-label>
-          <mat-select formControlName="clienteId">
-            @for (c of clientes; track c.id) {
-              <mat-option [value]="c.id">{{ c.nome }} ({{ c.cpf }})</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="full-span">
           <mat-label>Automóvel</mat-label>
           <mat-select formControlName="automovelId">
             @for (a of automoveis; track a.id) {
