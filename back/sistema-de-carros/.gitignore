@@ -1,11 +1,19 @@
 Thumbs.db
 .DS_Store
+
+# Maven build output
 .gradle
 build/
 target/
 out/
+!**/src/main/**
+!**/src/test/**
+
+# Micronaut
 .micronaut/
-.idea
+
+# IDEs
+.idea/
 *.iml
 *.ipr
 *.iws
@@ -13,3 +21,24 @@ out/
 .settings
 .classpath
 .factorypath
+
+# Java / JVM
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+*.war
+*.ear
+hs_err_pid*
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.*
+.env.local
+
+# Gerados pelo Maven
+generated-sources/
+maven-status/

@@ -1,0 +1,21 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <span class="app-title">🚗 Sistema de Aluguel de Carros</span>
+  <span class="spacer"></span>
+  @if (auth.estaLogado()) {
+    <a mat-button routerLink="/clientes" class="nav-link">Clientes</a>
+    <mat-chip
+      [color]="auth.ehAgente() ? 'accent' : 'primary'"
+      selected
+      class="tipo-chip"
+    >
+      {{ auth.usuarioLogado()?.tipo }}
+    </mat-chip>
+    <span class="usuario-nome">{{ auth.usuarioLogado()?.nome }}</span>
+    <button mat-button class="nav-link" (click)="logout()">Sair</button>
+  } @else {
+    <a mat-button routerLink="/login" class="nav-link">Login</a>
+    <a mat-button routerLink="/cadastro" class="nav-link">Cadastro</a>
+  }
+</mat-toolbar>
+
+<router-outlet></router-outlet>

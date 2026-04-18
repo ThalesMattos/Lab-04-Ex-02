@@ -1,0 +1,126 @@
+@if (loading) {
+  <div class="loading-container">
+    <mat-spinner diameter="56"></mat-spinner>
+  </div>
+}
+
+@if (!loading && cliente) {
+  <div class="container">
+
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">{{ cliente.nome }}</h2>
+        <span class="page-subtitle">Detalhes do cliente</span>
+      </div>
+      <div class="header-actions">
+        <button mat-stroked-button (click)="voltar()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+        <button mat-raised-button color="primary" (click)="editar()">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+      </div>
+    </div>
+
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="section-icon">person</mat-icon>
+          Dados Pessoais
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Nome</span>
+            <span class="value">{{ cliente.nome }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">CPF</span>
+            <span class="value">{{ cliente.cpf }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">RG</span>
+            <span class="value">{{ cliente.rg }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Profissão</span>
+            <span class="value">{{ cliente.profissao || '—' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="section-icon">location_on</mat-icon>
+          Endereço
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="endereco-text">{{ enderecoFormatado() }}</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">CEP</span>
+            <span class="value">{{ cliente.endereco.cep }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Logradouro</span>
+            <span class="value">{{ cliente.endereco.logradouro }}, {{ cliente.endereco.numero }}</span>
+          </div>
+          @if (cliente.endereco.complemento) {
+            <div class="info-item">
+              <span class="label">Complemento</span>
+              <span class="value">{{ cliente.endereco.complemento }}</span>
+            </div>
+          }
+          <div class="info-item">
+            <span class="label">Bairro</span>
+            <span class="value">{{ cliente.endereco.bairro }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Cidade/UF</span>
+            <span class="value">{{ cliente.endereco.cidade }}/{{ cliente.endereco.estado }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="section-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon class="section-icon">work</mat-icon>
+          Empregadores
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        @if (!cliente.empregadores || cliente.empregadores.length === 0) {
+          <p class="no-data">Nenhum empregador cadastrado.</p>
+        } @else {
+          <div class="empregadores-grid">
+            @for (emp of cliente.empregadores; track emp.nome) {
+              <mat-card class="empregador-card" appearance="outlined">
+                <mat-card-content>
+                  <div class="info-item">
+                    <span class="label">Empresa / Empregador</span>
+                    <span class="value emp-nome">{{ emp.nome }}</span>
+                  </div>
+                  <div class="info-item" style="margin-top: 8px">
+                    <span class="label">Rendimento</span>
+                    <span class="value rendimento">
+                      {{ emp.rendimento | currency : 'BRL' : 'symbol' : '1.2-2' }}
+                    </span>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            }
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+}

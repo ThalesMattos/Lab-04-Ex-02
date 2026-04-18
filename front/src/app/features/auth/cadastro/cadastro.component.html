@@ -1,0 +1,89 @@
+<div class="cadastro-container">
+  <mat-card class="cadastro-card">
+    <mat-card-header>
+      <mat-card-title class="cadastro-title">🚗 Sistema de Aluguel de Carros</mat-card-title>
+      <mat-card-subtitle>Crie sua conta</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <app-erro-alert [mensagem]="erroApi"></app-erro-alert>
+
+      <form [formGroup]="form" (ngSubmit)="cadastrar()">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome completo</mat-label>
+          <input matInput formControlName="nome" placeholder="Seu nome" />
+          <mat-icon matSuffix>person</mat-icon>
+          @if (form.get('nome')?.touched && form.get('nome')?.hasError('required')) {
+            <mat-error>Nome obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="seu@email.com" />
+          <mat-icon matSuffix>email</mat-icon>
+          @if (form.get('email')?.touched && form.get('email')?.hasError('required')) {
+            <mat-error>E-mail obrigatório</mat-error>
+          }
+          @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
+            <mat-error>E-mail inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input
+            matInput
+            [type]="senhaVisivel ? 'text' : 'password'"
+            formControlName="senha"
+            placeholder="Mínimo 6 caracteres"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="senhaVisivel = !senhaVisivel"
+          >
+            <mat-icon>{{ senhaVisivel ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('senha')?.touched && form.get('senha')?.hasError('required')) {
+            <mat-error>Senha obrigatória</mat-error>
+          }
+          @if (form.get('senha')?.touched && form.get('senha')?.hasError('minlength')) {
+            <mat-error>A senha deve ter no mínimo 6 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Conta</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="CLIENTE">Cliente (pessoa física)</mat-option>
+            <mat-option value="AGENTE">Agente (empresa / banco)</mat-option>
+          </mat-select>
+          @if (form.get('tipo')?.touched && form.get('tipo')?.hasError('required')) {
+            <mat-error>Selecione o tipo de conta</mat-error>
+          }
+        </mat-form-field>
+
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          class="full-width submit-btn"
+          [disabled]="carregando"
+        >
+          @if (carregando) {
+            <mat-spinner diameter="20" class="btn-spinner"></mat-spinner>
+          }
+          {{ carregando ? 'Criando conta...' : 'Cadastrar' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="card-actions">
+      <span>Já tem conta?</span>
+      <a mat-button color="primary" routerLink="/login">Fazer login</a>
+    </mat-card-actions>
+  </mat-card>
+</div>
