@@ -4,7 +4,7 @@
   align-items: center;
   min-height: calc(100vh - 64px);
   padding: 24px;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
   gap: 48px;
 }
 
@@ -25,7 +25,7 @@
 .illustration-text {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #388e3c;
+  color: #00796b;
   margin: 0 0 6px;
   text-align: center;
 }
